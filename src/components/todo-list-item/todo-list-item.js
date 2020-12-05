@@ -2,64 +2,37 @@ import React, { Component } from 'react';
 import './todo-list-item.css';
 
 export default class TodoListItem extends Component {
-    constructor(){
-        super();
-        this.state = {
-            done: false,
-            important: false
-        }
-        this.onLabelClick = () => {
-            this.setState(({done}) => {
-                return {
-                    done:!done
-                }
-            })
-        };
-        this.onMakeImportant = () => {
-            this.setState((state) => {
-                return {
-                    important: !state.important
-                }
-            })
-        }
-    }
+    render() {
+        const {
+            task, 
+            onTaskDone, 
+            onTaskImportant,
+            onDelete,
+            done, 
+            important} = this.props;
 
-
-    render(){
-        const { label, onDeleted } = this.props;
-        const { done, important } =  this.state;
-
-        let classNames = "todo-list-item";
-
+        let classNames = 'todo-list-item';
         if(done) {
             classNames += ' done';
         }
         if(important) {
-            classNames += ' important';
+            classNames += ' important'
         }
-        
-            return (
-                <span className={classNames}>
-                    <span 
-                        className="todo-list-item-label"
-                        onClick={ this.onLabelClick }>
-                            {label}
-                    </span>
-                    
-                    <button
-                        type="button"
-                        className="btn btn-outline-success btn-small"
-                        onClick={ this.onMakeImportant }>
-                        <i className="fa fa-exclamation"></i>
-                    </button>
-                    <button
-                        type="button"
-                        className="btn btn-outline-danger btn-small"
-                        onClick={onDeleted}
-                        >
-                        <i className="fa fa-trash-o"></i>
-                    </button>
-                </span>
-            )
+        return (
+            <div>
+                <span 
+                className={classNames}
+                onClick={onTaskDone}
+                >
+                { task }
+            </span>
+            <button
+                    onClick={onTaskImportant}
+                >!!!</button>
+            <button
+                onClick={onDelete}
+            >delete</button>
+            </div>
+        )
     }
 }

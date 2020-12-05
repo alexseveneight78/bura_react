@@ -4,47 +4,73 @@ import AppHeader from '../app-header/app-header';
 import SearchPanel from '../search-panel/search-panel';
 import TodoList from '../todo-list/todo-list';
 import ItemStatusFilter from '../item-status-filter/item-status-filter';
+import ItemAdd from '../item-add/item-add';
 
 import './app.css';
 
 export default class App extends Component {
-
   state = {
     todoData: [
-      { label: 'Drink Coffe', important: false, id: 1 },
-      { label: 'Make Awesome App', important: true, id: 2 },
-      { label: 'Buy Book', important: false, id: 3 }
+      { task: 'Drink Coffe', done: false, important: false, id: 1 },
+      { task: 'Build Awesome App', done: false, important: false, id: 2 },
+      { task: 'Buy Book', done: false, important: false, id: 3 }
     ]
   }
 
-    deleteItem = (id) => {
-      this.setState(({todoData}) => {
-        const idx = todoData.findIndex((el) => el.id === id);
+  onTaskDone = (id) => {
+    const idx = this.state.todoData.findIndex((el) => el.id === id);
+    this.setState(({todoData}) => {
+      let oldData = [...todoData];
+      oldData[idx].done = !oldData[idx].done;
+      return {
+        todoData: oldData
+      }
+    })
+  }
 
-        const newArr = [
-          ...todoData.slice(0, idx), 
-          ...todoData.slice(idx +1)
-        ]
+  onTaskImportant = (id) => {
+    const idx = this.state.todoData.findIndex((el) => el.id === id);
+    this.setState(({todoData}) => {
+      let oldData = [...todoData];
+      oldData[idx].important = !oldData[idx].important;
+      return {
+        todoData: oldData
+      }
+    })
+  }
 
-        return {
-          todoData: newArr
-        }
-    })}
- 
-  render(){
+  onDelete = (id) => {
+    const idx = this.state.todoData.findIndex((el) => el.id === id);
+    this.setState(({todoData}) => {
+      const newData = [
+        ...todoData.slice(0,idx),
+        ...todoData.slice(idx + 1)
+      ]
+      return {
+        todoData: newData
+      }
+    })
+  }
 
+  render() {
+    let doneCount = this.state.todoData.filter((item) => item.done).length;
+    let remainingTasks = this.state.todoData.length - doneCount;
     return (
-      <div className="todo-app">
-        <AppHeader toDo={1} done={3}/>
-        <div className="top-panel d-flex">
-          <SearchPanel />
-          <ItemStatusFilter />
-        </div>
+      <div className='app'>
+        <SearchPanel />
+        <AppHeader 
+          doneCount={doneCount}
+          remainingTasks={remainingTasks}
+        />
+        <ItemStatusFilter />
         <TodoList 
-          todos={this.state.todoData}
-          onDeleted={this.deleteItem}
+          todoData={this.state.todoData}
+          onTaskDone={this.onTaskDone}
+          onTaskImportant={this.onTaskImportant}
+          onDelete={this.onDelete}
           />
-    </div>
+          <ItemAdd />
+      </div>
     )
   }
 }

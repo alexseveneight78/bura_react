@@ -1,10 +1,10 @@
-import React from 'react';
+//import React from 'react';
 
-const AppHeader = ({toDo, done}) => {
+const AppHeader = ({doneCount, remainingTasks}) => {
+
     return (
-      <div className="app-header-d-flex">
-        <h1>Todo List</h1>
-        <h2>{toDo} more to do, {done} done</h2>
+      <div className='app-header'>
+        {doneCount} is done, {remainingTasks} to do.
       </div>
     )
   }

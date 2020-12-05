@@ -5,3 +5,6 @@
     font-weight: bold;
     color: steelblue;
 }
+.todo-list-item {
+    margin-left: 20px;
+}
