@@ -19,7 +19,8 @@ export default class App extends Component {
       { task: 'Build Awesome App', done: false, important: false, id: 2 },
       { task: 'Buy Book', done: false, important: false, id: 3 }
     ],
-    term: ''
+    term: '',
+    filter: 'active'
   }
 
 
@@ -90,10 +91,26 @@ export default class App extends Component {
     })
   }
 
+  filter(items, filter){
+    switch(filter) {
+      case 'all': 
+        return items;
+      case 'active': 
+       return items.filter((item) => !item.done);
+      case 'done': 
+        return items.filter((item) => item.done);
+      default: 
+        return items;
+    }
+  }
+
+  onFilterChange = (filter) => {
+    this.setState({filter})
+  }
 
   render() {
-    const {todoData, term} = this.state;
-    const visibleItems = this.search(todoData, term);
+    const {todoData, term, filter} = this.state;
+    const visibleItems = this.filter(this.search(todoData, term), filter);
     let doneCount = this.state.todoData.filter((item) => item.done).length;
     let remainingTasks = this.state.todoData.length - doneCount;
     return (
@@ -106,7 +123,8 @@ export default class App extends Component {
           remainingTasks={remainingTasks}
         />
         <ItemStatusFilter 
-
+          filter={filter}
+          onFilterChange={this.onFilterChange}
         />
         <TodoList 
           todoData={visibleItems}
