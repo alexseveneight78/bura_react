@@ -8,6 +8,7 @@ import ItemAdd from '../item-add/item-add';
 
 import './app.css';
 
+
 export default class App extends Component {
 
   maxId = 100
@@ -17,7 +18,8 @@ export default class App extends Component {
       { task: 'Drink Coffe', done: false, important: false, id: 1 },
       { task: 'Build Awesome App', done: false, important: false, id: 2 },
       { task: 'Buy Book', done: false, important: false, id: 3 }
-    ]
+    ],
+    term: ''
   }
 
 
@@ -75,21 +77,39 @@ export default class App extends Component {
     })
   }
 
-  
+  onSearchChange = (term) => {
+    this.setState({term})
+  }
+
+  search(items, term) {
+    if(term.length === 0) {
+      return items;
+    }
+    return items.filter((item) => {
+      return item.task.toLowerCase().indexOf(term.toLowerCase()) > -1;
+    })
+  }
+
 
   render() {
+    const {todoData, term} = this.state;
+    const visibleItems = this.search(todoData, term);
     let doneCount = this.state.todoData.filter((item) => item.done).length;
     let remainingTasks = this.state.todoData.length - doneCount;
     return (
       <div className='app'>
-        <SearchPanel />
+        <SearchPanel 
+          onSearchChange={this.onSearchChange}
+        />
         <AppHeader 
           doneCount={doneCount}
           remainingTasks={remainingTasks}
         />
-        <ItemStatusFilter />
+        <ItemStatusFilter 
+
+        />
         <TodoList 
-          todoData={this.state.todoData}
+          todoData={visibleItems}
           onTaskDone={this.onTaskDone}
           onTaskImportant={this.onTaskImportant}
           onDelete={this.onDelete}
