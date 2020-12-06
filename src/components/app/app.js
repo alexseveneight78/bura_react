@@ -9,6 +9,9 @@ import ItemAdd from '../item-add/item-add';
 import './app.css';
 
 export default class App extends Component {
+
+  maxId = 100
+
   state = {
     todoData: [
       { task: 'Drink Coffe', done: false, important: false, id: 1 },
@@ -16,6 +19,7 @@ export default class App extends Component {
       { task: 'Buy Book', done: false, important: false, id: 3 }
     ]
   }
+
 
   onTaskDone = (id) => {
     const idx = this.state.todoData.findIndex((el) => el.id === id);
@@ -52,6 +56,27 @@ export default class App extends Component {
     })
   }
 
+  onAddTask = (text) => {
+    let newTask = {
+      task: text,
+      done: false,
+      important: false,
+      id: this.maxId++
+    };
+    this.setState(({todoData}) => {
+      let newData = [...todoData];
+      let updatedData = [
+        ...newData,
+        newTask
+      ]
+      return {
+        todoData: updatedData
+      }
+    })
+  }
+
+  
+
   render() {
     let doneCount = this.state.todoData.filter((item) => item.done).length;
     let remainingTasks = this.state.todoData.length - doneCount;
@@ -69,7 +94,9 @@ export default class App extends Component {
           onTaskImportant={this.onTaskImportant}
           onDelete={this.onDelete}
           />
-          <ItemAdd />
+          <ItemAdd 
+            onAddTask={this.onAddTask}
+          />
       </div>
     )
   }
